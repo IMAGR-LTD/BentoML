@@ -1,6 +1,7 @@
 import pytest
 from bentoml.service.artifacts import BentoServiceArtifact
 from bentoml.frameworks.sklearn import SklearnModelArtifact
+from bentoml.frameworks.detectron import DetectronModelArtifact
 from bentoml.exceptions import FailedPrecondition
 
 
