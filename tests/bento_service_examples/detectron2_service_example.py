@@ -1,4 +1,4 @@
-# The example is based on the coco example in 
+# The example is based on the coco example in
 # https://www.dlology.com/blog/how-to-train-detectron2-with-custom-coco-datasets/
 
 import torch
@@ -11,25 +11,25 @@ from bentoml.adapters import ImageInput
 from detectron2.data import transforms as T
 import sys, traceback
 
+
 def get_traceback_list():
     exc_type, exc_value, exc_traceback = sys.exc_info()
     return traceback.format_exception(exc_type, exc_value, exc_traceback)
 
+
 os.environ['BENTOML_DEVICE'] = 'GPU'
+
 
 @bentoml.env(infer_pip_packages=True)
 @bentoml.artifacts([DetectronModelArtifact('model')])
 class CocoDetectronClassifier(bentoml.BentoService):
-
     @bentoml.api(input=ImageInput(), batch=False)
     def predict(self, img: np.ndarray) -> Dict:
-        _aug = T.ResizeShortestEdge(
-            [800, 800], 1333
-        )
+        _aug = T.ResizeShortestEdge([800, 800], 1333)
         boxes = None
         scores = None
         pred_classes = None
-        pred_masks= None
+        pred_masks = None
         try:
             original_image = img[:, :, ::-1]
             height, width = original_image.shape[:2]
@@ -48,9 +48,9 @@ class CocoDetectronClassifier(bentoml.BentoService):
                 print(line[:-1])
 
         result = {
-            "boxes" : boxes,
-            "scores" : scores,
-            "classes" : pred_classes,
-            "masks" : pred_masks
+            "boxes": boxes,
+            "scores": scores,
+            "classes": pred_classes,
+            "masks": pred_masks,
         }
         return result
