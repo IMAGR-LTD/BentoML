@@ -3,12 +3,12 @@ import yaml
 from bentoml.exceptions import MissingDependencyException
 from bentoml.service.artifacts import BentoServiceArtifact
 from bentoml.service.env import BentoServiceEnv
-from detectron2.config import CfgNode as CN
+# from detectron2.config import CfgNode as CN
 
-def load_config_obj(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        dicts = yaml.safe_load(f)
-    return CN(dicts)
+# def load_config_obj(filename):
+#     with open(filename, "r", encoding="utf-8") as f:
+#         dicts = yaml.safe_load(f)
+#     return CN(dicts)
 
 class DetectronModelArtifact(BentoServiceArtifact):
     def __init__(self, name):
@@ -40,12 +40,17 @@ class DetectronModelArtifact(BentoServiceArtifact):
             )  # noqa # pylint: disable=unused-import
             from detectron2.modeling import META_ARCH_REGISTRY
             from centermask2.centermask.config import get_cfg
+            from detectron2.config import CfgNode as CN
             from detectron2.data import transforms as T
             import json
         except ImportError:
             raise MissingDependencyException(
                 "Detectron package is required to use DetectronArtifact"
             )
+        def load_config_obj(filename):
+            with open(filename, "r", encoding="utf-8") as f:
+                dicts = yaml.safe_load(f)
+            return CN(dicts)
 
         cfg = load_config_obj(f"{path}/{self._file_name}.yaml")
         meta_arch = META_ARCH_REGISTRY.get(cfg.MODEL.META_ARCHITECTURE)
